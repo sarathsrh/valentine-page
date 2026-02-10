@@ -6,7 +6,7 @@
   <style>
     body {
       text-align: center;
-      background: pink;
+      background: linear-gradient(135deg, #ff9a9e, #fecfef);
       font-family: cursive;
       margin: 0;
       height: 100vh;
@@ -17,28 +17,49 @@
       overflow: hidden;
     }
 
+    h1 {
+      font-size: 3em;
+      color: #b30000;
+      text-shadow: 3px 3px #fff;
+      margin-bottom: 20px;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.08); color: #ff1a1a; }
+      100% { transform: scale(1); }
+    }
+
     .button-container {
       display: flex;
-      gap: 40px; /* space between buttons */
+      gap: 40px;
     }
 
     button {
-      padding: 15px 30px;
-      font-size: 18px;
+      padding: 15px 35px;
+      font-size: 20px;
       border: none;
-      border-radius: 10px;
+      border-radius: 50px;
       cursor: pointer;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    button:hover {
+      transform: scale(1.15);
+      box-shadow: 0 0 20px #ff4d4d;
     }
 
     #yes {
-      background-color: red;
+      background: linear-gradient(45deg, #ff0000, #ff4d4d);
       color: white;
     }
 
     #no {
-      background-color: white;
-      color: red;
-      position: relative; /* start relative inside flexbox */
+      background: linear-gradient(45deg, #fff, #ffe6e6);
+      color: #ff0000;
+      position: relative;
       transition: left 0.3s ease, top 0.3s ease;
     }
 
@@ -48,19 +69,20 @@
       position: fixed;
       top: 0; left: 0;
       width: 100%; height: 100%;
-      background: rgba(0,0,0,0.5);
+      background: rgba(0,0,0,0.6);
       justify-content: center;
       align-items: center;
     }
     .modal-content {
-      background: white;
-      padding: 30px;
-      border-radius: 15px;
+      background: #fff0f5;
+      padding: 40px;
+      border-radius: 20px;
       text-align: center;
-      font-size: 24px;
-      color: red;
+      font-size: 26px;
+      color: #b30000;
       position: relative;
       animation: pop 0.5s ease;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
     }
     @keyframes pop {
       from { transform: scale(0.5); opacity: 0; }
@@ -71,21 +93,45 @@
     .heart {
       position: absolute;
       color: red;
-      animation: floatUp 3s linear forwards;
+      animation: floatUp 4s linear forwards;
     }
     @keyframes floatUp {
       from { transform: translateY(0); opacity: 1; }
-      to { transform: translateY(-200px); opacity: 0; }
+      to { transform: translateY(-250px); opacity: 0; }
     }
 
     /* Photo styling */
     .photo {
-      width: 200px;
-      height: 200px;
-      border-radius: 15px;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
       margin-bottom: 20px;
-      border: 4px solid red;
+      border: 6px solid #ff0000;
       object-fit: cover;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      animation: glow 2s infinite alternate;
+    }
+
+    @keyframes glow {
+      from { box-shadow: 0 0 15px #ff4d4d; }
+      to { box-shadow: 0 0 30px #ff1a1a; }
+    }
+
+    /* Special styling for first line */
+    .first-line {
+      display: block;
+      font-size: 36px;
+      color: #ff1a1a;
+      font-weight: bold;
+      margin-bottom: 15px;
+      text-shadow: 2px 2px #fff;
+    }
+
+    .other-line {
+      display: block;
+      font-size: 22px;
+      color: #b30000;
+      margin-top: 8px;
     }
   </style>
 </head>
@@ -93,8 +139,8 @@
   <img src="Raveena.jpeg" alt="Raveena" class="photo">
   <h1>Raveena <br>Will you be my Valentine? ❤️</h1>
   <div class="button-container">
-    <button id="yes">Yes</button>
-    <button id="no">No</button>
+    <button id="yes">Yes 😍</button>
+    <button id="no">No 😜</button>
   </div>
 
   <!-- Modal -->
@@ -118,19 +164,17 @@
         e.clientY - (rect.top + rect.height / 2)
       );
       if (distance < 100) {
-        // switch to absolute positioning when escaping
         noBtn.style.position = "absolute";
         noBtn.style.left = Math.random() * (window.innerWidth - rect.width) + "px";
         noBtn.style.top = Math.random() * (window.innerHeight - rect.height) + "px";
       }
     });
 
-    // All messages
     const messages = [
-      "Yay! You said Yes 💕💖",
-      "You made my day ❤️",
-      "Forever Valentines 💘",
-      "Love is in the air 💞"
+      "<span class='first-line'>I knew you'd say Yes! 😍</span>",
+      "<span class='other-line'>You don't even realize how special you are to me 💖</span>",
+      "<span class='other-line'>My world feels warmer, brighter, and happier because of you 💞</span>",
+      "<span class='other-line'> ❤️</span>"
     ];
 
     let heartInterval;
@@ -138,24 +182,20 @@
     // Show modal with floating hearts
     yesBtn.addEventListener("click", () => {
       modal.style.display = "flex";
+      modalMessage.innerHTML = messages.join("");
 
-      // Display ALL messages at once
-      modalMessage.innerHTML = messages.join("<br>");
-
-      // Generate continuous floating hearts
       heartInterval = setInterval(() => {
         const heart = document.createElement("div");
         heart.className = "heart";
         heart.innerHTML = "❤️";
         heart.style.left = Math.random() * window.innerWidth + "px";
         heart.style.top = window.innerHeight + "px";
-        heart.style.fontSize = (Math.random() * 20 + 20) + "px";
+        heart.style.fontSize = (Math.random() * 25 + 20) + "px";
         document.body.appendChild(heart);
-        setTimeout(() => heart.remove(), 3000);
+        setTimeout(() => heart.remove(), 4000);
       }, 300);
     });
 
-    // Close modal when clicked anywhere
     modal.addEventListener("click", () => {
       modal.style.display = "none";
       clearInterval(heartInterval);
